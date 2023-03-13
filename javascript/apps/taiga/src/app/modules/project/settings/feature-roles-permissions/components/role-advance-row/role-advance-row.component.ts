@@ -53,10 +53,6 @@ export class RoleAdvanceRowComponent implements OnInit, OnChanges {
   ) {}
 
   public ngOnInit() {
-    const childEntities: Entity[] = ['task', 'sprint'];
-
-    this.isChildModule = childEntities.includes(this.entity.key);
-
     this.refreshPermission();
     this.previousPermission = this.permissionRowModel;
   }

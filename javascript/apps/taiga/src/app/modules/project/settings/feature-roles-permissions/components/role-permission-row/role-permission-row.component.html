@@ -106,23 +106,5 @@ Copyright (c) 2023-present Kaleidos INC
         </div>
       </div>
     </div>
-    <div
-      class="sub"
-      [attr.id]="advancedSettingsContainerId"
-      *ngIf="showAdvancedSetting">
-      <ng-container
-        *ngFor="
-          let entity of entities | keyvalue: insertionOrder;
-          trackBy: trackByValue
-        ">
-        <tg-role-advance-row
-          *ngIf="entityVisible(entity.key)"
-          hideMembers
-          [entity]="entity"
-          [formGroup]="getEntityFormGroup(entity.key)"
-          data-test="module-permissions-row">
-        </tg-role-advance-row>
-      </ng-container>
-    </div>
   </div>
 </ng-container>

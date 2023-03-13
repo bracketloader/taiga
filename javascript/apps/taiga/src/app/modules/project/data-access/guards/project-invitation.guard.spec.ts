@@ -59,7 +59,6 @@ describe('Project Invitation Guard', () => {
 
     const projectApiService = inject(ProjectApiService);
     const project = ProjectMockFactory();
-    project.userPermissions.push('view_task');
     projectApiService.getProject.mockReturnValue(of(project));
 
     const authService = inject(AuthService);
@@ -144,7 +143,6 @@ describe('Project Invitation Guard', () => {
 
     const projectApiService = inject(ProjectApiService);
     const project = ProjectMockFactory();
-    project.userPermissions.push('view_task');
     projectApiService.getProject.mockReturnValue(of(project));
 
     TestBed.inject(EnvironmentInjector).runInContext(() => {
