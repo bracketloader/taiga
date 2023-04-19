@@ -22,13 +22,19 @@ import { CommonTemplateModule } from '~/app/shared/common-template.module';
 import { ButtonLoadingModule } from '~/app/shared/directives/button-loading/button-loading.module';
 import { TitleDirective } from '~/app/shared/title/title.directive';
 import { NewProjectEffects } from './+state/effects/new-project.effects';
+import { AssistantStepComponent } from './components/assistant-step/assistant-step.component';
 import { InitStepComponent } from './components/init-step/init-step.component';
 import { NewProjectComponent } from './components/new-project/new-project.component';
 import { TemplateStepComponent } from './components/template-step/template-step.component';
 import { FeatureNewProjectRoutingModule } from './feature-new-project-routing.module';
 
 @NgModule({
-  declarations: [NewProjectComponent, InitStepComponent, TemplateStepComponent],
+  declarations: [
+    NewProjectComponent,
+    InitStepComponent,
+    TemplateStepComponent,
+    AssistantStepComponent,
+  ],
   imports: [
     FormsModule,
     ReactiveFormsModule,

@@ -36,6 +36,10 @@ export interface ProjectCreation {
   logo?: File;
 }
 
+export interface ProjectAssistantCreation extends ProjectCreation {
+  stories: Partial<Story>[];
+}
+
 export type EditProject = Merge<
   Pick<Project, 'id' | 'name' | 'logo' | 'description'>,
   { logo?: File }

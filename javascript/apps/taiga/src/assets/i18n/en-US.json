@@ -106,6 +106,12 @@
       "choose_image_tip": "Allowed formats: gif, png, jpg, svg and webp",
       "format_error": "The file format is not allowed. Allowed formats: gif, png, jpg, svg or webp"
     },
+    "assistant": {
+      "generate_stories": "Generate stories",
+      "regenerate_stories": "Regenerate stories",
+      "generating_stories": "Generating",
+      "generating_stories_success": "Stories generated"
+    },
     "delete_modal_title": "Delete {{projectTitle}}?",
     "delete_modal_warning": "<strong class='bold'>Warning;</strong> This action cannot be undone.",
     "delete_modal_text": "This action will delete the project, along with all the stories and attachments in it.",

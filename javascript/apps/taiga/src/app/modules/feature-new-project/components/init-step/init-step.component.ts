@@ -64,6 +64,17 @@ export class InitStepComponent implements OnInit, OnChanges {
       ),
       action: () => this.initProject('blank'),
     },
+    {
+      nextStep: 'Taiga Assistant',
+      icon: 'tai',
+      title: this.translocoService.translate(
+        'new_project.first_step.taiga_assistant'
+      ),
+      description: this.translocoService.translate(
+        'new_project.first_step.taiga_assistant_description'
+      ),
+      action: () => this.initProject('assistant'),
+    },
   ];
 
   public readonlyWorkspace = false;

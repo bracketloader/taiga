@@ -7,11 +7,21 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { InvitationRequest, Project, ProjectCreation } from '@taiga/data';
+import {
+  InvitationRequest,
+  Project,
+  ProjectAssistantCreation,
+  ProjectCreation,
+} from '@taiga/data';
 
 export const createProject = createAction(
   '[NewProject] create project',
   props<{ project: ProjectCreation }>()
+);
+
+export const createAssistantProject = createAction(
+  '[NewProject] create assistant project',
+  props<{ project: ProjectAssistantCreation }>()
 );
 
 export const createProjectSuccess = createAction(
@@ -19,8 +29,23 @@ export const createProjectSuccess = createAction(
   props<{ project: Project }>()
 );
 
+export const createAssistantProjectStories = createAction(
+  '[NewProject] create assistant project stories',
+  props<{ assistant: ProjectAssistantCreation; project: Project }>()
+);
+
+export const createAssistantProjectSuccess = createAction(
+  '[NewProject] create assistant project success',
+  props<{ project: Project }>()
+);
+
 export const createProjectError = createAction(
   '[NewProject] create project error',
+  props<{ error: unknown }>()
+);
+
+export const createAssistantProjectError = createAction(
+  '[NewProject] create assistant project error',
   props<{ error: unknown }>()
 );
 

@@ -28,6 +28,16 @@ Copyright (c) 2023-present Kaleidos INC
           [workspaces]="workspaceList">
         </tg-template-step>
       </ng-container>
+
+      <!-- Blank step -->
+      <ng-container *ngIf="currentStep === 'assistant'">
+        <tg-assistant-step
+          (emitCancel)="cancelAssistantStep()"
+          (emitCreateProject)="createAssistantProject($event)"
+          [selectedWorkspaceId]="formData.workspaceId"
+          [workspaces]="workspaceList">
+        </tg-assistant-step>
+      </ng-container>
     </div>
   </ng-container>
 </ng-container>

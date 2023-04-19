@@ -28,6 +28,10 @@ export class ConfigService {
     return this.config.api;
   }
 
+  public get openai(): string {
+    return this.config.openai;
+  }
+
   public get wsUrl(): string {
     return this.config.ws;
   }

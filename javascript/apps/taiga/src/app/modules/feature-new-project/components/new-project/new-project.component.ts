@@ -8,17 +8,18 @@
 
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   OnInit,
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { ProjectCreation } from '@taiga/data';
+import { ProjectAssistantCreation, ProjectCreation } from '@taiga/data';
 import { Observable } from 'rxjs';
-import { createProject } from '~/app/modules/feature-new-project/+state/actions/new-project.actions';
+import {
+  createAssistantProject,
+  createProject,
+} from '~/app/modules/feature-new-project/+state/actions/new-project.actions';
 import { Step } from '~/app/modules/feature-new-project/data/new-project.model';
 import { fetchWorkspaceList } from '~/app/modules/workspace/feature-list/+state/actions/workspace.actions';
 import { selectWorkspaces } from '~/app/modules/workspace/feature-list/+state/selectors/workspace.selectors';
@@ -37,12 +38,7 @@ export class NewProjectComponent implements OnInit {
   @ViewChild(TemplateStepComponent)
   public templateStepComponent?: TemplateStepComponent;
 
-  constructor(
-    private store: Store,
-    private route: ActivatedRoute,
-    private actions$: Actions,
-    private cd: ChangeDetectorRef
-  ) {}
+  constructor(private store: Store, private route: ActivatedRoute) {}
 
   public workspaceList$ = this.store.select(selectWorkspaces);
   public currentStep: Step = 'init';
@@ -87,17 +83,23 @@ export class NewProjectComponent implements OnInit {
     this.store.dispatch(createProject({ project: this.formData }));
   }
 
+  public createAssistantProject(project: ProjectAssistantCreation) {
+    this.store.dispatch(createAssistantProject({ project }));
+  }
+
   public setStep(step: Step) {
     this.currentStep = step;
   }
 
   public cancelTemplateStep(savedForm?: TemplateProjectForm) {
-    this.currentStep = 'init';
+    this.setStep('init');
 
     if (savedForm) {
       this.savedForm = savedForm;
-    } else {
-      window.history.back();
     }
+  }
+
+  public cancelAssistantStep() {
+    this.setStep('init');
   }
 }

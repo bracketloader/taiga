@@ -10,6 +10,7 @@ export type SocialLogins = 'github' | 'gitlab' | 'google';
 
 export interface Config {
   api: string;
+  openai: string;
   ws: string;
   adminEmail: string;
   supportEmail: string;

@@ -8,6 +8,8 @@
   "first_step": {
     "blank_project": "Blank project",
     "blank_project_description": "Start a project from scratch",
+    "taiga_assistant": "Taiga assistant",
+    "taiga_assistant_description": "Create a new project using Taiga AI assistant",
     "template_project": "From a template",
     "template_project_description": "Use one of our community templates",
     "import_project": "Import a project",

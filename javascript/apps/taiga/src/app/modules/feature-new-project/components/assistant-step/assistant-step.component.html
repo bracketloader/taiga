@@ -1,0 +1,157 @@
+<!--
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+Copyright (c) 2023-present Kaleidos INC
+-->
+
+<ng-template
+  transloco
+  let-t>
+  <div class="new-step-top-actions">
+    <button
+      tuiButton
+      type="button"
+      (click)="previousStep()"
+      appearance="tertiary"
+      icon="arrow-left">
+      {{ t('commons.back') }}
+    </button>
+  </div>
+  <div class="assistant-step-wrapper">
+    <h1
+      class="new-step-title"
+      id="main-area-title">
+      Taiga Assistant
+    </h1>
+    <form
+      class="template-project-form"
+      #form="ngForm"
+      [formGroup]="templateProjectForm"
+      (ngSubmit)="createProject()">
+      <tg-ui-select
+        [label]="t('commons.workspace')"
+        type="avatar">
+        <tui-select
+          tuiTextfieldSize="l"
+          formControlName="workspace"
+          [valueContent]="content"
+          [readOnly]="true">
+          {{ t('new_project.choose_workspace') }}
+          <tui-data-list-wrapper
+            *tuiDataList
+            size="l"
+            [items]="workspaces"
+            [itemContent]="content">
+          </tui-data-list-wrapper>
+        </tui-select>
+      </tg-ui-select>
+      <ng-template
+        #content
+        let-data>
+        <div class="workspace-option">
+          <tg-ui-avatar
+            size="m"
+            type="dark"
+            [color]="workspace.color"
+            [name]="workspace.name">
+          </tg-ui-avatar>
+          <div class="name">{{ workspace.name }}</div>
+        </div>
+      </ng-template>
+
+      <!-- Project name -->
+      <tg-ui-input [label]="t('common_project.forms.project_name')">
+        <input
+          formControlName="name"
+          data-test="input-name"
+          inputRef
+          tuiAutoFocus
+          maxlength="80" />
+        <ng-container inputError>
+          <tg-ui-error
+            [enabled]="form.submitted"
+            data-test="name-required-error"
+            error="required">
+            {{ t('common_project.forms.project_name_error') }}
+          </tg-ui-error>
+        </ng-container>
+      </tg-ui-input>
+
+      <!-- Project description -->
+      <tg-ui-textarea
+        [label]="t('common_project.forms.project_description')"
+        [optional]="true">
+        <tui-text-area
+          class="general-textarea"
+          formControlName="description"
+          data-test="input-description"
+          [expandable]="true"
+          [maxLength]="200">
+          {{ t('common_project.forms.project_description_placeholder') }}
+        </tui-text-area>
+        <tg-ui-error
+          inputError
+          [enabled]="form.submitted"
+          data-test="description-maxlength-error"
+          error="maxlength">
+          {{ t('common_project.forms.max_length_error') }}
+        </tg-ui-error>
+      </tg-ui-textarea>
+
+      <div class="new-step-actions">
+        <button
+          (click)="previousStep()"
+          *ngIf="!stories"
+          data-test="cancel-create-project"
+          tuiButton
+          type="button"
+          appearance="tertiary">
+          {{ t('commons.cancel') }}
+        </button>
+        <button
+          loading
+          iconRight="tai"
+          tuiButton
+          type="button"
+          (click)="initGenerateStories()"
+          appearance="primary">
+          <ng-container>
+            {{ t('common_project.assistant.generate_stories') }}
+          </ng-container>
+        </button>
+      </div>
+
+      <dl
+        class="stories-list"
+        *ngIf="stories">
+        <ng-container *ngFor="let story of stories; trackBy: trackByStoryIndex">
+          <dt>{{ story.title }}</dt>
+          <dd>{{ story.description }}</dd>
+        </ng-container>
+      </dl>
+
+      <div
+        class="new-step-actions"
+        *ngIf="stories">
+        <button
+          (click)="previousStep()"
+          data-test="cancel-create-project"
+          tuiButton
+          type="button"
+          appearance="tertiary">
+          {{ t('commons.cancel') }}
+        </button>
+        <button
+          iconRight="chevron-right"
+          data-test="submit-create-project"
+          tuiButton
+          type="submit"
+          appearance="primary">
+          {{ t('common_project.create_project') }}
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>

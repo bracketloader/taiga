@@ -27,6 +27,7 @@ import {
 } from '@taiga/data';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { OpenAiService } from '../shared/openai/open-ai.service';
 
 export interface MembersResponse {
   totalMemberships: number;
@@ -43,7 +44,11 @@ export interface InvitationsResponse {
   providedIn: 'root',
 })
 export class ProjectApiService {
-  constructor(private http: HttpClient, private config: ConfigService) {}
+  constructor(
+    private http: HttpClient,
+    private config: ConfigService,
+    private openAIService: OpenAiService
+  ) {}
 
   public listProjects() {
     return this.http.get<Project[]>(`${this.config.apiUrl}/projects`);
