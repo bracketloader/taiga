@@ -132,9 +132,7 @@ Copyright (c) 2023-present Kaleidos INC
       </tg-ui-input>
 
       <!-- Project description -->
-      <tg-ui-textarea
-        [label]="t('common_project.forms.project_description')"
-        [optional]="true">
+      <tg-ui-textarea label="Project description and goal">
         <tui-text-area
           class="general-textarea"
           formControlName="description"
@@ -210,6 +208,16 @@ Copyright (c) 2023-present Kaleidos INC
               [story]="story"
               (removeStory)="removeStory($event)"></tg-assistant-step-card>
           </ng-container>
+          <button
+            type="button"
+            (click)="generateCard()"
+            class="generate-card-button">
+            <tui-svg
+              class="loading-icon"
+              src="tai">
+            </tui-svg>
+            Generate new card
+          </button>
         </div>
       </div>
       <div

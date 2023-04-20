@@ -112,14 +112,48 @@ export class AssistantStepComponent implements OnInit {
     );
   }
 
+  public generateCard() {
+    const role = this.formValue.role;
+    const organization = this.formValue.organization;
+    const type = this.formValue.type;
+    const description = this.formValue.description;
+    const stories = this.formValue.stories;
+    const prompt = `
+      I am a ${role} working in a ${organization} on a ${type} project. I need to ${description} My current project epics are ${stories.join(
+      ', '
+    )}. Create a new Epic
+      The response should be in JSON format. The title should be a short summary and the description should explain the user story in a short paragraph.
+      It should use the following structure with no other text:
+
+      {"title": "", "description": ""}
+    `;
+
+    const options = {
+      prompt,
+      temperature: 0.7,
+      max_tokens: 1000,
+    };
+
+    this.openAiService
+      .getDataFromOpenAI(options)
+      .pipe(untilDestroyed(this))
+      .subscribe((data: string) => {
+        const story: Partial<Story> = JSON.parse(data) as Partial<Story>;
+        const stories = this.formValue.stories;
+        stories.push(story);
+        this.templateProjectForm.get('stories')?.setValue(stories);
+        this.cd.detectChanges();
+      });
+  }
+
   public initGenerateStories() {
     const role = this.formValue.role;
     const organization = this.formValue.organization;
     const type = this.formValue.type;
     const description = this.formValue.description;
     const prompt = `
-      I need you to create a list of user stories for a ${type} of a ${organization} that includes the work of the following profiles: ${role}.
-      The project description is as follows: ${description}. The response should be in JSON format. The title should be a short summary and the description should explain the user story in a short paragraph.
+      I am a ${role} working in a ${organization} on a ${type} project. I need to ${description} Create a list of epics for this project.
+      The response should be in JSON format. The title should be a short summary and the description should explain the user story in a short paragraph.
       It should use the following structure with no other text:
 
       {

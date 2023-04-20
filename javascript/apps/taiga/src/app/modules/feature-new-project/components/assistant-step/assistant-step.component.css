@@ -75,3 +75,16 @@ Copyright (c) 2023-present Kaleidos INC
   max-block-size: 700px;
   overflow: auto;
 }
+
+.generate-card-button {
+  align-items: center;
+  appearance: none;
+  background: var(--color-white);
+  border: none;
+  box-shadow: 4px 4px 8px var(--color-box-shadow);
+  cursor: pointer;
+  display: flex;
+  gap: var(--spacing-8);
+  min-block-size: 50px;
+  padding: 24px;
+}

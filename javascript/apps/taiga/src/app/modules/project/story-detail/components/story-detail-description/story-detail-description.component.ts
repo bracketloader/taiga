@@ -255,7 +255,7 @@ export class StoryDetailDescriptionComponent implements OnChanges, OnDestroy {
     const register =
       this.translationtionForm.get('register')?.value || this.registers[0];
     const prompt = `
-      Translate this description: ${description} into ${language} as if you were a native speaker using a ${register} language register. Please try to maintain the same structure:
+      Translate this description: ${description} into ${language} as if you were a native speaker using a ${register} language register. Keep the same structure with minor variations when required:
     `;
 
     const options = {
