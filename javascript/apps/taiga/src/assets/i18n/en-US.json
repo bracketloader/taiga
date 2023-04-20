@@ -104,7 +104,13 @@
       "project_icon": "Project icon",
       "max_length_error": "Project description must be 200 characters or fewer",
       "choose_image_tip": "Allowed formats: gif, png, jpg, svg and webp",
-      "format_error": "The file format is not allowed. Allowed formats: gif, png, jpg, svg or webp"
+      "format_error": "The file format is not allowed. Allowed formats: gif, png, jpg, svg or webp",
+      "user_roles": "Project roles",
+      "user_roles_error": "Project roles can’t be empty",
+      "project_organization": "Type of organization",
+      "project_organization_error": "Type of organization can’t be empty",
+      "project_type": "Type of project",
+      "project_type_error": "Type of project can’t be empty"
     },
     "assistant": {
       "generate_stories": "Generate stories",

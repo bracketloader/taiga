@@ -19,17 +19,18 @@ Copyright (c) 2023-present Kaleidos INC
       {{ t('commons.back') }}
     </button>
   </div>
+
   <div class="assistant-step-wrapper">
-    <h1
-      class="new-step-title"
-      id="main-area-title">
-      Taiga Assistant
-    </h1>
     <form
       class="template-project-form"
       #form="ngForm"
       [formGroup]="templateProjectForm"
       (ngSubmit)="createProject()">
+      <h1
+        class="new-step-title"
+        id="main-area-title">
+        Taiga Assistant
+      </h1>
       <tg-ui-select
         [label]="t('commons.workspace')"
         type="avatar">
@@ -79,6 +80,57 @@ Copyright (c) 2023-present Kaleidos INC
         </ng-container>
       </tg-ui-input>
 
+      <!-- User role -->
+      <tg-ui-input [label]="t('common_project.forms.user_roles')">
+        <input
+          formControlName="role"
+          data-test="input-role"
+          inputRef
+          tuiAutoFocus
+          maxlength="80" />
+        <ng-container inputError>
+          <tg-ui-error
+            [enabled]="form.submitted"
+            error="required">
+            {{ t('common_project.forms.user_roles_error') }}
+          </tg-ui-error>
+        </ng-container>
+      </tg-ui-input>
+
+      <!-- Organization type -->
+      <tg-ui-input [label]="t('common_project.forms.project_organization')">
+        <input
+          formControlName="organization"
+          data-test="input-organization"
+          inputRef
+          tuiAutoFocus
+          maxlength="80" />
+        <ng-container inputError>
+          <tg-ui-error
+            [enabled]="form.submitted"
+            error="required">
+            {{ t('common_project.forms.project_organization_error') }}
+          </tg-ui-error>
+        </ng-container>
+      </tg-ui-input>
+
+      <!-- Project type -->
+      <tg-ui-input [label]="t('common_project.forms.project_type')">
+        <input
+          formControlName="type"
+          data-test="input-type"
+          inputRef
+          tuiAutoFocus
+          maxlength="80" />
+        <ng-container inputError>
+          <tg-ui-error
+            [enabled]="form.submitted"
+            error="required">
+            {{ t('common_project.forms.project_type_error') }}
+          </tg-ui-error>
+        </ng-container>
+      </tg-ui-input>
+
       <!-- Project description -->
       <tg-ui-textarea
         [label]="t('common_project.forms.project_description')"
@@ -117,21 +169,49 @@ Copyright (c) 2023-present Kaleidos INC
           type="button"
           (click)="initGenerateStories()"
           appearance="primary">
-          <ng-container>
+          <ng-container *ngIf="!stories">
             {{ t('common_project.assistant.generate_stories') }}
+          </ng-container>
+          <ng-container *ngIf="stories">
+            {{ t('common_project.assistant.regenerate_stories') }}
           </ng-container>
         </button>
       </div>
-
-      <dl
-        class="stories-list"
-        *ngIf="stories">
-        <ng-container *ngFor="let story of stories; trackBy: trackByStoryIndex">
-          <dt>{{ story.title }}</dt>
-          <dd>{{ story.description }}</dd>
-        </ng-container>
-      </dl>
-
+    </form>
+    <div class="stories-wrapper">
+      <div
+        class="stories-inner"
+        [ngClass]="{
+          'stories-loading': !stories
+        }">
+        <div
+          class="loading"
+          *ngIf="!stories">
+          <div>
+            <tui-svg
+              class="loading-icon"
+              src="tai">
+            </tui-svg>
+            <span> Blank project </span>
+          </div>
+          <div class="loading-text">Write a prompt to generate stories</div>
+        </div>
+        <div
+          class="stories-list"
+          *ngIf="stories">
+          <ng-container
+            *ngFor="
+              let story of stories;
+              index as index;
+              trackBy: trackByStoryIndex
+            ">
+            <tg-assistant-step-card
+              [index]="index"
+              [story]="story"
+              (removeStory)="removeStory($event)"></tg-assistant-step-card>
+          </ng-container>
+        </div>
+      </div>
       <div
         class="new-step-actions"
         *ngIf="stories">
@@ -144,6 +224,7 @@ Copyright (c) 2023-present Kaleidos INC
           {{ t('commons.cancel') }}
         </button>
         <button
+          (click)="createProject()"
           iconRight="chevron-right"
           data-test="submit-create-project"
           tuiButton
@@ -152,6 +233,6 @@ Copyright (c) 2023-present Kaleidos INC
           {{ t('common_project.create_project') }}
         </button>
       </div>
-    </form>
+    </div>
   </div>
 </ng-template>

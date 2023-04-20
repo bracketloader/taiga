@@ -27,6 +27,7 @@ import { InitStepComponent } from './components/init-step/init-step.component';
 import { NewProjectComponent } from './components/new-project/new-project.component';
 import { TemplateStepComponent } from './components/template-step/template-step.component';
 import { FeatureNewProjectRoutingModule } from './feature-new-project-routing.module';
+import { AssistantStepCardComponent } from './components/assistant-step/components/assistant-step-card/assistant-step-card.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { FeatureNewProjectRoutingModule } from './feature-new-project-routing.mo
     InitStepComponent,
     TemplateStepComponent,
     AssistantStepComponent,
+    AssistantStepCardComponent,
   ],
   imports: [
     FormsModule,

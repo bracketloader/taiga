@@ -63,6 +63,9 @@ export class AssistantStepComponent implements OnInit {
     return this.templateProjectForm.value as {
       workspace: Workspace;
       name: string;
+      role: string;
+      organization: string;
+      type: string;
       description: string;
       color: number;
       logo: File;
@@ -84,6 +87,9 @@ export class AssistantStepComponent implements OnInit {
     this.templateProjectForm = this.fb.group({
       workspace: [this.selectedWorkspaceId, Validators.required],
       name: ['', Validators.required],
+      role: ['', Validators.required],
+      organization: ['', Validators.required],
+      type: ['', Validators.required],
       description: ['', Validators.required],
       color: [RandomColorService.randomColorPicker(), Validators.required],
       logo: '',
@@ -107,11 +113,13 @@ export class AssistantStepComponent implements OnInit {
   }
 
   public initGenerateStories() {
+    const role = this.formValue.role;
+    const organization = this.formValue.organization;
+    const type = this.formValue.type;
     const description = this.formValue.description;
     const prompt = `
-      You are a product manager for an app development startup. You should create the basic user stories to get started in an agile project management app project with the following description: ${description}.
-      Please provide a list of user stories required to develop this project.
-      The response should be in JSON format where the title should be a short summary and the description should explain the user story in a short paragraph.
+      I need you to create a list of user stories for a ${type} of a ${organization} that includes the work of the following profiles: ${role}.
+      The project description is as follows: ${description}. The response should be in JSON format. The title should be a short summary and the description should explain the user story in a short paragraph.
       It should use the following structure with no other text:
 
       {
@@ -127,8 +135,8 @@ export class AssistantStepComponent implements OnInit {
 
     const options = {
       prompt,
-      temperature: 0.1,
-      max_tokens: 922,
+      temperature: 0.5,
+      max_tokens: 2000,
     };
 
     this.openAiService
@@ -143,6 +151,14 @@ export class AssistantStepComponent implements OnInit {
 
   public trackByStoryIndex(index: number) {
     return index;
+  }
+
+  public removeStory(title: string) {
+    const storyList = this.formValue.stories.filter(
+      (story) => story.title !== title
+    );
+    this.templateProjectForm.get('stories')?.setValue(storyList);
+    this.cd.detectChanges();
   }
 
   public createProject() {

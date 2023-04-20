@@ -5,3 +5,73 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 Copyright (c) 2023-present Kaleidos INC
 */
+
+.workspace-option {
+  align-items: center;
+  display: flex;
+  gap: var(--spacing-8);
+}
+
+.assistant-step-wrapper {
+  display: flex;
+  gap: var(--spacing-36);
+  inline-size: 960px;
+  margin-block: 0;
+  margin-inline: auto;
+}
+
+.template-project-form,
+.stories-wrapper {
+  flex: 1;
+}
+
+.template-project-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+}
+
+.stories-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-16);
+}
+
+.stories-inner {
+  background-color: var(--color-gray10);
+  flex: 1;
+  padding-block: var(--spacing-16);
+  padding-inline: var(--spacing-24);
+
+  &.stories-loading {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.loading {
+  align-items: center;
+  color: var(--color-gray100);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+.loading-icon {
+  block-size: var(--spacing-16);
+  color: var(--color-secondary);
+  inline-size: var(--spacing-16);
+}
+
+.loading-text {
+  color: var(--color-gray70);
+}
+
+.stories-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  max-block-size: 700px;
+  overflow: auto;
+}

@@ -1,0 +1,47 @@
+/*
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+Copyright (c) 2023-present Kaleidos INC
+*/
+
+@import "tools/typography.css";
+
+.story-card {
+  @mixin font-paragraph;
+
+  background: var(--color-white);
+  block-size: 100%;
+  border-radius: 3px;
+  box-shadow: 4px 4px 8px var(--color-box-shadow);
+  padding: var(--spacing-16);
+  position: relative;
+}
+
+.story-card-title {
+  margin-block-end: var(--spacing-4);
+
+  & > .index {
+    color: var(--color-secondary);
+    padding-inline-end: var(--spacing-4);
+  }
+}
+
+.story-card-description {
+  @mixin font-small;
+  /* stylelint-disable */
+  color: var(--color-gray80);
+  display: -webkit-box;
+  line-height: 150%;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  /* stylelint-enable */
+}
+
+.close-button {
+  inset-block-start: var(--spacing-4);
+  inset-inline-end: var(--spacing-4);
+  position: absolute;
+}

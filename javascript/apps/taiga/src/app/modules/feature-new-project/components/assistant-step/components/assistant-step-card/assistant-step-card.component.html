@@ -1,0 +1,31 @@
+<!--
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+Copyright (c) 2023-present Kaleidos INC
+-->
+
+<ng-template
+  transloco
+  let-t>
+  <div class="story-card">
+    <div class="story-card-title">
+      <span class="index">{{ index + 1 }}</span>
+      {{ story.title }}
+    </div>
+    <div class="story-card-description">
+      {{ story.description }}
+    </div>
+
+    <button
+      [attr.aria-label]="t('story.close')"
+      icon="close"
+      appearance="action-button"
+      (click)="emitRemoveStory()"
+      tuiIconButton
+      size="m"
+      class="close-button"
+      type="button"></button>
+  </div>
+</ng-template>
