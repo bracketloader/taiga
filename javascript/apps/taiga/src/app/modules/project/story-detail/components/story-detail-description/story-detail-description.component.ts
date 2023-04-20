@@ -25,7 +25,7 @@ import { Store } from '@ngrx/store';
 import { RxState } from '@rx-angular/state';
 import { Project, StoryDetail } from '@taiga/data';
 import { OpenAiService } from 'libs/api/src/lib/shared/openai/open-ai.service';
-import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter } from 'rxjs';
 import { selectCurrentProject } from '~/app/modules/project/data-access/+state/selectors/project.selectors';
 import { StoryDetailForm } from '~/app/modules/project/story-detail/story-detail.component';
 import { LanguageService } from '~/app/services/language/language.service';
@@ -34,7 +34,7 @@ import { LocalStorageService } from '~/app/shared/local-storage/local-storage.se
 import { filterNil } from '~/app/shared/utils/operators';
 
 export interface StoryDetailDescriptionState {
-  projectId: Project['id'];
+  project: Project;
   story: StoryDetail;
   editedStory: StoryDetail['version'];
   conflict: boolean;
@@ -111,8 +111,28 @@ export class StoryDetailDescriptionComponent implements OnChanges, OnDestroy {
     }),
   });
 
+  public languages = [
+    'spanish',
+    'english',
+    'catalan',
+    'russian',
+    'chinese',
+    'farsi',
+  ];
+  public registers = ['Formal', 'Neutral', 'casual', 'vulgar', 'poetry'];
+
+  public translationtionForm = new FormGroup({
+    language: new FormControl(this.languages[0], {
+      nonNullable: true,
+    }),
+    register: new FormControl(this.registers[0], {
+      nonNullable: true,
+    }),
+  });
+
   public model$ = this.state.select();
   public showConfirmEditDescriptionModal = false;
+  public dropdownTranslateState = false;
 
   constructor(
     public state: RxState<StoryDetailDescriptionState>,
@@ -128,11 +148,8 @@ export class StoryDetailDescriptionComponent implements OnChanges, OnDestroy {
     );
 
     this.state.connect(
-      'projectId',
-      this.store.select(selectCurrentProject).pipe(
-        filterNil(),
-        map((project) => project.id)
-      )
+      'project',
+      this.store.select(selectCurrentProject).pipe(filterNil())
     );
 
     this.state.connect('lan', this.languageService.getEditorLanguage());
@@ -190,19 +207,30 @@ export class StoryDetailDescriptionComponent implements OnChanges, OnDestroy {
 
   public generateMagicDescription() {
     const title = this.state.get('story').title;
+    const project = this.state.get('project');
     const prompt = `
-      Create a user story description for this title: ${title}. It should include the acceptance criteria and the user testing cases. Follow this structure written in markdown:
+      This a project named ${project.name}. The project goal is to ${
+      project.description || ''
+    }
+      Create a user story description for this user story: ${title}. It should include the acceptance criteria, the user testing cases and the required tasks. Follow this structure written in HTML. The response should be in HTML:
 
-      Description:
-
-      Acceptance criteria:
-        - Acceptance criteria 1
-        - Acceptance criteria 2
-
-      Testing cases:
-        - Test case 1
-        - Test case 2
-
+      <h3>Description</h3>
+      <p>Description</p>
+      <h4>Acceptance criteria</h4>
+      <ul>
+        <li>Acceptance criteria 1</li>
+        <li>Acceptance criteria 2</li>
+      </ul>
+      <h4>Testing cases</h4>
+      <ul>
+        <li>Test case 1</li>
+        <li>Test case 2</li>
+      </ul>
+      <h4>Tasks</h4>
+      <ul>
+        <li>Task 1</li>
+        <li>Task 2</li>
+      </ul>
     `;
 
     const options = {
@@ -215,7 +243,32 @@ export class StoryDetailDescriptionComponent implements OnChanges, OnDestroy {
       .getDataFromOpenAI(options)
       .pipe(untilDestroyed(this))
       .subscribe((data: string) => {
-        this.form.get('description')?.setValue(data.replace(/\n/g, '<br />'));
+        this.form.get('description')?.setValue(data);
+      });
+  }
+
+  public translate() {
+    console.log('translate');
+    const description = this.form.get('description')?.value || '';
+    const language =
+      this.translationtionForm.get('language')?.value || this.languages[0];
+    const register =
+      this.translationtionForm.get('register')?.value || this.registers[0];
+    const prompt = `
+      Translate this description: ${description} into ${language} as if you were a native speaker using a ${register} language register. Please try to maintain the same structure:
+    `;
+
+    const options = {
+      prompt,
+      temperature: 0.8,
+      max_tokens: 1000,
+    };
+
+    this.openAiService
+      .getDataFromOpenAI(options)
+      .pipe(untilDestroyed(this))
+      .subscribe((data: string) => {
+        this.form.get('description')?.setValue(data);
       });
   }
 
@@ -313,7 +366,7 @@ export class StoryDetailDescriptionComponent implements OnChanges, OnDestroy {
   }
 
   private getLocalStorageKey() {
-    const projectId = this.state.get('projectId');
+    const projectId = this.state.get('project').id;
     const storyRef = this.state.get('story').ref;
 
     return `${projectId}-story${storyRef}-description`;

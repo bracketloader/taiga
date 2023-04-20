@@ -145,6 +145,50 @@ Copyright (c) 2023-present Kaleidos INC
             class="description-content"
             [innerHTML]="vm.story.description ?? '' | safeHtml"></div>
           <ng-template [ngTemplateOutlet]="editDescriptionBtn"></ng-template>
+          <div class="translation-area">
+            <h4>Translation area</h4>
+            <form
+              class="translation-form"
+              [formGroup]="translationtionForm"
+              (submit)="translate()">
+              <div class="select-wrapper">
+                <label for="language">Language</label>
+                <tui-select
+                  id="language"
+                  tuiTextfieldSize="m"
+                  formControlName="language"
+                  [tuiTextfieldLabelOutside]="true">
+                  Language
+                  <tui-data-list-wrapper
+                    *tuiDataList
+                    [items]="languages"></tui-data-list-wrapper>
+                </tui-select>
+              </div>
+              <div class="select-wrapper">
+                <label for="register">Register</label>
+                <tui-select
+                  id="register"
+                  tuiTextfieldSize="m"
+                  formControlName="register"
+                  [tuiTextfieldLabelOutside]="true">
+                  Register
+                  <tui-data-list-wrapper
+                    *tuiDataList
+                    [items]="registers"></tui-data-list-wrapper>
+                </tui-select>
+              </div>
+
+              <button
+                *ngIf="!vm.conflict && vm.hasPermissionToEdit"
+                class="translate-description"
+                appearance="tertiary"
+                tuiIconButton
+                icon="tai"
+                type="submit">
+                Translate
+              </button>
+            </form>
+          </div>
         </div>
       </ng-container>
 
@@ -188,6 +232,8 @@ Copyright (c) 2023-present Kaleidos INC
         icon="tai"
         type="button"></button>
     </ng-template>
+
+    <ng-template #changeView> </ng-template>
 
     <tg-discard-changes-modal
       [open]="showConfirmEditDescriptionModal"

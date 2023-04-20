@@ -120,3 +120,15 @@ Copyright (c) 2023-present Kaleidos INC
 tg-field-conflict {
   inline-size: 100%;
 }
+
+.translation-form {
+  align-items: flex-end;
+  display: flex;
+  gap: var(--spacing-8);
+  inline-size: 100%;
+
+  & > .select-wrapper,
+  & > .translate-description {
+    flex: 1;
+  }
+}
