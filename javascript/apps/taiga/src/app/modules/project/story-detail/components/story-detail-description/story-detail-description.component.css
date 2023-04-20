@@ -76,6 +76,12 @@ Copyright (c) 2023-present Kaleidos INC
   position: absolute;
 }
 
+.generate-magic-description {
+  inset-block-start: var(--spacing-12);
+  inset-inline-end: var(--spacing-44);
+  position: absolute;
+}
+
 .edit-field-actions {
   display: flex;
   gap: var(--spacing-8);

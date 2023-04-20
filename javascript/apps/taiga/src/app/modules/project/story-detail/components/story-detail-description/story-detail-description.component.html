@@ -158,6 +158,8 @@ Copyright (c) 2023-present Kaleidos INC
             {{ t('story.empty_description') }}
           </p>
           <ng-template [ngTemplateOutlet]="editDescriptionBtn"></ng-template>
+          <ng-template
+            [ngTemplateOutlet]="generateMagicDescriptionBtn"></ng-template>
         </div>
       </ng-template>
     </ng-container>
@@ -173,6 +175,17 @@ Copyright (c) 2023-present Kaleidos INC
         appearance="tertiary"
         tuiIconButton
         icon="pen"
+        type="button"></button>
+    </ng-template>
+
+    <ng-template #generateMagicDescriptionBtn>
+      <button
+        *ngIf="!vm.conflict && vm.hasPermissionToEdit"
+        (click)="generateMagicDescription()"
+        class="generate-magic-description"
+        appearance="tertiary"
+        tuiIconButton
+        icon="tai"
         type="button"></button>
     </ng-template>
 

@@ -20,9 +20,11 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { RxState } from '@rx-angular/state';
 import { Project, StoryDetail } from '@taiga/data';
+import { OpenAiService } from 'libs/api/src/lib/shared/openai/open-ai.service';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs';
 import { selectCurrentProject } from '~/app/modules/project/data-access/+state/selectors/project.selectors';
 import { StoryDetailForm } from '~/app/modules/project/story-detail/story-detail.component';
@@ -45,7 +47,7 @@ export interface StoryDetailDescriptionState {
     code: string;
   };
 }
-
+@UntilDestroy()
 @Component({
   selector: 'tg-story-detail-description',
   templateUrl: './story-detail-description.component.html',
@@ -117,7 +119,8 @@ export class StoryDetailDescriptionComponent implements OnChanges, OnDestroy {
     private hasPermissions: PermissionsService,
     private store: Store,
     private localStorageService: LocalStorageService,
-    private languageService: LanguageService
+    private languageService: LanguageService,
+    private openAiService: OpenAiService
   ) {
     this.state.connect(
       'hasPermissionToEdit',
@@ -183,6 +186,37 @@ export class StoryDetailDescriptionComponent implements OnChanges, OnDestroy {
     } else {
       this.setEdit(false);
     }
+  }
+
+  public generateMagicDescription() {
+    const title = this.state.get('story').title;
+    const prompt = `
+      Create a user story description for this title: ${title}. It should include the acceptance criteria and the user testing cases. Follow this structure written in markdown:
+
+      Description:
+
+      Acceptance criteria:
+        - Acceptance criteria 1
+        - Acceptance criteria 2
+
+      Testing cases:
+        - Test case 1
+        - Test case 2
+
+    `;
+
+    const options = {
+      prompt,
+      temperature: 0.6,
+      max_tokens: 1000,
+    };
+
+    this.openAiService
+      .getDataFromOpenAI(options)
+      .pipe(untilDestroyed(this))
+      .subscribe((data: string) => {
+        this.form.get('description')?.setValue(data.replace(/\n/g, '<br />'));
+      });
   }
 
   public save() {
