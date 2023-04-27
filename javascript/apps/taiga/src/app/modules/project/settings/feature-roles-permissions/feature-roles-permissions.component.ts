@@ -23,7 +23,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { RxState, selectSlice } from '@rx-angular/state';
+import { RxState } from '@rx-angular/state';
 import { Project, Role } from '@taiga/data';
 import { fromEvent } from 'rxjs';
 import {
@@ -53,6 +53,7 @@ import {
 } from './+state/selectors/roles-permissions.selectors';
 import { EntityConflictPermission } from './models/modal-permission.model';
 import { ProjectsSettingsFeatureRolesPermissionsService } from './services/feature-roles-permissions.service';
+import { selectSlice } from '@rx-angular/state/selections';
 
 @UntilDestroy()
 @Component({
