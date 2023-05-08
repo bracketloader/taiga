@@ -27,7 +27,7 @@ Copyright (c) 2023-present Kaleidos INC
           <ng-container
             *ngFor="let member of vm.members; trackBy: trackByUsername">
             <tg-ui-dtable-row
-              [class.highlighted]="vm.highlightedRow === member">
+              [class.highlighted]="vm.highlightedRow === member.user.username">
               <tg-ui-dtable-cell
                 class="user"
                 [@removeAnimationCell]="member.cancelled">
@@ -43,7 +43,9 @@ Copyright (c) 2023-present Kaleidos INC
                 class="action-column"
                 [@removeAnimationCell]="member.cancelled">
                 <tg-workspace-detail-people-members-remove
-                  [class.highlighted]="vm.highlightedRow === member"
+                  [class.highlighted]="
+                    vm.highlightedRow === member.user.username
+                  "
                   *ngIf="vm.currentUser.username !== member.user.username"
                   [member]="member"
                   (highlightRemoveMemberRow)="highlightRemoveMemberRow($event)"

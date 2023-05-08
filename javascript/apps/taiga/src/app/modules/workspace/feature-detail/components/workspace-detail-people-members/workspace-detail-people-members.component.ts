@@ -184,7 +184,7 @@ export class WorkspaceDetailPeopleMembersComponent implements OnInit {
       animationDisabled: boolean;
       workspace: Workspace | null;
       currentUser: User;
-      highlightedRow: WorkspaceMembership | null;
+      highlightedRow: WorkspaceMembership['user']['username'];
       removingMembers: WorkspaceMembership['user']['username'][];
       undoMemberRemove: WorkspaceMembership['user']['username'][];
     }>,
@@ -239,7 +239,7 @@ export class WorkspaceDetailPeopleMembersComponent implements OnInit {
   }
 
   public highlightRemoveMemberRow(member: WorkspaceMembership | null) {
-    this.state.set({ highlightedRow: member });
+    this.state.set({ highlightedRow: member?.user.username });
   }
 
   public initRemoveMember(member: WorkspaceMembership) {
