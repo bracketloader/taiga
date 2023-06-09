@@ -36,6 +36,7 @@ import { UserAvatarComponent } from '~/app/shared/user-avatar/user-avatar.compon
 import { AssignUserComponent } from '../components/assign-user/assign-user.component';
 import { KanbanCreateStoryInlineComponent } from './components/create-story-inline/kanban-create-story-inline.component';
 import { KanbanStatusComponent } from './components/status/kanban-status.component';
+import { KanbanCreateStatusComponent } from './components/create-status/kanban-create-status.component';
 import { A11yDragStoryDirective } from './components/story/kanban-story-a11y-drag.directive';
 import { KanbanStoryComponent } from './components/story/kanban-story.component';
 import { KanbanWorkflowComponent } from './components/workflow/kanban-workflow.component';
@@ -50,6 +51,7 @@ import { ProjectFeatureKanbanComponent } from './project-feature-kanban.componen
   declarations: [
     ProjectFeatureKanbanComponent,
     KanbanStatusComponent,
+    KanbanCreateStatusComponent,
     KanbanWorkflowComponent,
     KanbanStoryKeyboardNavigationDirective,
     KanbanStatusKeyboardNavigationDirective,

@@ -664,7 +664,17 @@ export const reducer = createImmerReducer(
     });
 
     return state;
-  })
+  }),
+  on(
+    KanbanApiActions.createStatusSuccess,
+    KanbanEventsActions.updateStatus,
+    (state, { status }): KanbanState => {
+      state.workflows![0].statuses.push(status);
+      state.stories[status.slug] = [];
+
+      return state;
+    }
+  )
 );
 
 export const kanbanFeature = createFeature({

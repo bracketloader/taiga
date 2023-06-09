@@ -23,6 +23,7 @@ import {
   Story,
   StoryDetail,
   StoryView,
+  Status,
 } from '@taiga/data';
 import {
   combineLatest,
@@ -258,6 +259,17 @@ export class ProjectFeatureKanbanComponent {
           ProjectActions.projectEventActions.removeMember(
             eventResponse.event.content
           )
+        );
+      });
+
+    this.wsService
+      .projectEvents<{ status: Status }>('workflowstatuses.create')
+      .pipe(untilDestroyed(this))
+      .subscribe((eventResponse) => {
+        this.store.dispatch(
+          KanbanEventsActions.updateStatus({
+            status: eventResponse.event.content.status,
+          })
         );
       });
 
