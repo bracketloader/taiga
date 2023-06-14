@@ -10,6 +10,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  OnDestroy,
   ViewChild,
   ViewContainerRef,
   inject,
@@ -38,7 +39,7 @@ import { Router } from '@angular/router';
   imports: [CommonTemplateModule, ProjectFeatureStoryWrapperFullViewModule],
   providers: [RxEffects],
 })
-export class ProjectFeatureViewSetterComponent {
+export class ProjectFeatureViewSetterComponent implements OnDestroy {
   @ViewChild('kanbanHost', { read: ViewContainerRef })
   public set kanbanHost(host: ViewContainerRef | undefined) {
     this.kanbanHost$.next(host);
@@ -84,6 +85,10 @@ export class ProjectFeatureViewSetterComponent {
         void this.loadKanban(host);
       }
     );
+  }
+
+  public ngOnDestroy() {
+    this.store.dispatch(StoryDetailActions.leaveStoryDetail());
   }
 
   private fetchStory() {

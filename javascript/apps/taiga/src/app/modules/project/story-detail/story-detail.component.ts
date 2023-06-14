@@ -16,7 +16,6 @@ import {
   EventEmitter,
   HostListener,
   Input,
-  OnDestroy,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -107,7 +106,7 @@ export interface StoryDetailForm {
     },
   ],
 })
-export class StoryDetailComponent implements OnDestroy {
+export class StoryDetailComponent {
   @Input()
   public sidebarOpen = true;
 
@@ -532,10 +531,6 @@ export class StoryDetailComponent implements OnDestroy {
           })
         );
       });
-  }
-
-  public ngOnDestroy() {
-    this.store.dispatch(StoryDetailActions.leaveStoryDetail());
   }
 
   private events() {

@@ -87,7 +87,7 @@ export class CommentUserInputComponent implements ComponentCanDeactivate {
       return this.discard$.pipe(take(1));
     }
 
-    return of(false);
+    return of(true);
   }
 
   public open() {
