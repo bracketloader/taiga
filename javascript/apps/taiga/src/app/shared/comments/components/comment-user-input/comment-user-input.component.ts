@@ -6,35 +6,99 @@
  * Copyright (c) 2023-present Kaleidos INC
  */
 
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostListener,
+  inject,
+} from '@angular/core';
 import { UserAvatarComponent } from '~/app/shared/user-avatar/user-avatar.component';
 import { Store } from '@ngrx/store';
 import { selectUser } from '~/app/modules/auth/data-access/+state/selectors/auth.selectors';
 import { filterNil } from '~/app/shared/utils/operators';
 import { RxState } from '@rx-angular/state';
 import { User } from '@taiga/data';
-import { TranslocoModule } from '@ngneat/transloco';
+import { EditorComponent } from '~/app/shared/editor/editor.component';
+import { CommonTemplateModule } from '~/app/shared/common-template.module';
+import { DiscardChangesModalComponent } from '~/app/shared/discard-changes-modal/discard-changes-modal.component';
+import { ComponentCanDeactivate } from '~/app/shared/can-deactivate/can-deactivate.guard';
+import { CanDeactivateService } from '~/app/shared/can-deactivate/can-deactivate.service';
 
 interface CommentUserInputComponentState {
   user: User;
+  open: boolean;
+  editorReady: boolean;
+  comment: string;
+  showConfirmationModal: boolean;
 }
 
 @Component({
   selector: 'tg-comment-user-input',
   standalone: true,
-  imports: [CommonModule, UserAvatarComponent, TranslocoModule],
+  imports: [
+    CommonTemplateModule,
+    UserAvatarComponent,
+    EditorComponent,
+    DiscardChangesModalComponent,
+  ],
   templateUrl: './comment-user-input.component.html',
   styleUrls: ['./comment-user-input.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RxState],
 })
-export class CommentUserInputComponent {
+export class CommentUserInputComponent implements ComponentCanDeactivate {
+  @HostListener('window:beforeunload')
+  public canDeactivate() {
+    return !this.hasChanges();
+  }
+
   public store = inject(Store);
-  public state = inject(RxState<CommentUserInputComponentState>);
+  public state = inject(RxState) as RxState<CommentUserInputComponentState>;
   public model$ = this.state.select();
 
   constructor() {
     this.state.connect('user', this.store.select(selectUser).pipe(filterNil()));
+
+    const canDeactivateService = inject(CanDeactivateService);
+    canDeactivateService.addComponent(this);
+  }
+
+  public open() {
+    this.state.set({
+      comment: '',
+      editorReady: false,
+      showConfirmationModal: false,
+      open: true,
+    });
+  }
+
+  public cancel() {
+    if (this.hasChanges()) {
+      this.state.set({ showConfirmationModal: true });
+      return false;
+    }
+
+    this.state.set({ open: false, editorReady: false });
+    return true;
+  }
+
+  public onCommentContentChange(comment: string) {
+    this.state.set({ comment });
+  }
+
+  public onInitEditor() {
+    this.state.set({ editorReady: true });
+  }
+
+  public hasChanges() {
+    return this.state.get('comment').trim().length > 0;
+  }
+
+  public discard() {
+    this.state.set({ showConfirmationModal: false, open: false });
+  }
+
+  public keepEditing() {
+    this.state.set({ showConfirmationModal: false });
   }
 }

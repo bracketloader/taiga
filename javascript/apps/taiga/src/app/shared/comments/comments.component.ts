@@ -26,6 +26,8 @@ import { TuiButtonModule, TuiHintModule } from '@taiga-ui/core';
 import { CommentUserInputComponent } from './components/comment-user-input/comment-user-input.component';
 import { CommentSkeletonComponent } from './components/comment skeleton/comment-skeleton.component';
 import { LocalStorageService } from '../local-storage/local-storage.service';
+import { EditorImageUploadService } from '../editor/editor-image-upload.service';
+import { CommentsImageUploadService } from './comments-image-upload.service';
 
 export type OrderComments = '-createdAt' | 'createdAt';
 
@@ -54,6 +56,10 @@ export type OrderComments = '-createdAt' | 'createdAt';
         scope: 'comments',
       },
     },
+    {
+      provide: EditorImageUploadService,
+      useClass: CommentsImageUploadService,
+    },
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -73,16 +79,6 @@ export class CommentsComponent {
     this.localStorageService.set('comments_order', newOrder);
 
     this.changeOrder.emit(newOrder);
-  }
-
-  public openCommentInput(): void {
-    alert(
-      `
-    (\\(\\
-    ( -.-) "Work in progress"
-    o_(")(")
-    `
-    );
   }
 
   public trackIndex(index: number): number {

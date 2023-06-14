@@ -11,6 +11,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ProjectAdminResolver } from './project-admin.resolver.service';
 import { ProjectFeatureShellResolverService } from './project-feature-shell-resolver.service';
 import { ProjectFeatureShellComponent } from './project-feature-shell.component';
+import { CanDeactivateGuard } from '~/app/shared/can-deactivate/can-deactivate.guard';
 
 const routes: Routes = [
   {
@@ -40,6 +41,7 @@ const routes: Routes = [
           import(
             '~/app/modules/project/feature-view-setter/project-feature-view-setter.module'
           ).then((m) => m.ProjectFeatureViewSetterModule),
+        canDeactivate: [CanDeactivateGuard],
       },
       {
         path: 'stories/:storyRef',
@@ -47,6 +49,7 @@ const routes: Routes = [
           import(
             '~/app/modules/project/feature-view-setter/project-feature-view-setter.module'
           ).then((m) => m.ProjectFeatureViewSetterModule),
+        canDeactivate: [CanDeactivateGuard],
       },
       {
         path: ':slug/settings',
