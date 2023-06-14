@@ -25,6 +25,7 @@ import { CommonTemplateModule } from '~/app/shared/common-template.module';
 import { DiscardChangesModalComponent } from '~/app/shared/discard-changes-modal/discard-changes-modal.component';
 import { ComponentCanDeactivate } from '~/app/shared/can-deactivate/can-deactivate.guard';
 import { CanDeactivateService } from '~/app/shared/can-deactivate/can-deactivate.service';
+import { Subject, delay, map, of, take } from 'rxjs';
 
 interface CommentUserInputComponentState {
   user: User;
@@ -53,26 +54,40 @@ export class CommentUserInputComponent implements ComponentCanDeactivate {
   public saved = new EventEmitter<string>();
 
   @HostListener('window:beforeunload')
-  public canDeactivate() {
+  public beforeunload() {
     return !this.hasChanges();
   }
 
   public store = inject(Store);
   public state = inject(RxState) as RxState<CommentUserInputComponentState>;
   public model$ = this.state.select();
+  public discard$ = new Subject<boolean>();
 
   constructor() {
-    this.state.set({
-      comment: '',
-      editorReady: false,
-      showConfirmationModal: false,
-      open: false,
-    });
+    this.reset();
 
     this.state.connect('user', this.store.select(selectUser).pipe(filterNil()));
 
     const canDeactivateService = inject(CanDeactivateService);
     canDeactivateService.addComponent(this);
+
+    this.state.hold(this.discard$, (discard) => {
+      if (discard) {
+        this.discard();
+      } else {
+        this.keepEditing();
+      }
+    });
+  }
+
+  public canDeactivate() {
+    if (this.hasChanges()) {
+      this.state.set({ showConfirmationModal: true });
+
+      return this.discard$.pipe(take(1));
+    }
+
+    return of(false);
   }
 
   public open() {
@@ -106,15 +121,25 @@ export class CommentUserInputComponent implements ComponentCanDeactivate {
     return this.state.get('comment').trim().length > 0;
   }
 
-  public discard() {
+  public save() {
+    this.saved.emit(this.state.get('comment'));
+    this.reset();
+  }
+
+  private discard() {
     this.state.set({ showConfirmationModal: false, open: false });
   }
 
-  public keepEditing() {
+  private keepEditing() {
     this.state.set({ showConfirmationModal: false });
   }
 
-  public save() {
-    this.saved.emit(this.state.get('comment'));
+  private reset() {
+    this.state.set({
+      comment: '',
+      editorReady: false,
+      showConfirmationModal: false,
+      open: false,
+    });
   }
 }

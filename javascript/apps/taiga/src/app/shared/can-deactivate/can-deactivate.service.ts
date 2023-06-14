@@ -8,6 +8,7 @@
 
 import { Injectable } from '@angular/core';
 import { ComponentCanDeactivate } from './can-deactivate.guard';
+import { map, zip } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class CanDeactivateService {
@@ -22,6 +23,8 @@ export class CanDeactivateService {
   }
 
   public check() {
-    return !!this.components.find((it) => it.canDeactivate());
+    return zip([...this.components.map((it) => it.canDeactivate())]).pipe(
+      map((results) => !results.some((it) => !it))
+    );
   }
 }

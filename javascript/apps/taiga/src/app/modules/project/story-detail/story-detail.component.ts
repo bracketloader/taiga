@@ -16,6 +16,7 @@ import {
   EventEmitter,
   HostListener,
   Input,
+  OnDestroy,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -60,6 +61,7 @@ import {
 } from './data-access/+state/selectors/story-detail.selectors';
 import { storyDetailFeature } from './data-access/+state/reducers/story-detail.reducer';
 import { OrderComments } from '~/app/shared/comments/comments.component';
+import { selectUser } from '~/app/modules/auth/data-access/+state/selectors/auth.selectors';
 
 export interface StoryDetailState {
   project: Project;
@@ -105,7 +107,7 @@ export interface StoryDetailForm {
     },
   ],
 })
-export class StoryDetailComponent {
+export class StoryDetailComponent implements OnDestroy {
   @Input()
   public sidebarOpen = true;
 
@@ -517,13 +519,23 @@ export class StoryDetailComponent {
   }
 
   public onComment(comment: string) {
-    this.store.dispatch(
-      StoryDetailActions.newComment({
-        storyRef: this.state.get('story').ref,
-        projectId: this.state.get('project').id,
-        comment,
-      })
-    );
+    this.store
+      .select(selectUser)
+      .pipe(take(1), filterNil())
+      .subscribe((user) => {
+        this.store.dispatch(
+          StoryDetailActions.newComment({
+            storyRef: this.state.get('story').ref,
+            projectId: this.state.get('project').id,
+            comment,
+            user,
+          })
+        );
+      });
+  }
+
+  public ngOnDestroy() {
+    this.store.dispatch(StoryDetailActions.leaveStoryDetail());
   }
 
   private events() {

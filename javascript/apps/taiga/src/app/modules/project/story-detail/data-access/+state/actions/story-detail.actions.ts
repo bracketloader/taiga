@@ -66,6 +66,7 @@ export const StoryDetailActions = createActionGroup({
       comment: string;
       storyRef: Story['ref'];
       projectId: Project['id'];
+      user: User;
     }>(),
   },
 });

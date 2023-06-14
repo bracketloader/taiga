@@ -95,7 +95,6 @@ export class StoryDetailCommentsEffects {
                 this.store.select(selectUser).pipe(filterNil()),
               ]),
               map(([, user]) => {
-                console.log('aaa');
                 return StoryDetailApiActions.newCommentSuccess({
                   storyRef,
                   projectId,

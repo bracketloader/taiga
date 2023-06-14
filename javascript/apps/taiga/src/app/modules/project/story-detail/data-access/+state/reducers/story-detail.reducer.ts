@@ -215,7 +215,7 @@ export const reducer = createImmerReducer(
     }
   ),
   on(
-    StoryDetailApiActions.newCommentSuccess,
+    StoryDetailActions.newComment,
     (state, { comment, user }): StoryDetailState => {
       const newComment: UserComment = {
         createdAt: new Date().toISOString(),
@@ -231,6 +231,10 @@ export const reducer = createImmerReducer(
         state.comments.unshift(newComment);
       } else {
         state.comments.push(newComment);
+      }
+
+      if (state.totalComments) {
+        state.totalComments++;
       }
 
       return state;

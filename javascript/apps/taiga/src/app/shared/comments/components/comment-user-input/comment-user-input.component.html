@@ -59,7 +59,7 @@ Copyright (c) 2023-present Kaleidos INC
 
     <tg-discard-changes-modal
       [open]="vm.showConfirmationModal"
-      (discard)="discard()"
-      (cancel)="keepEditing()"></tg-discard-changes-modal>
+      (discard)="discard$.next(true)"
+      (cancel)="discard$.next(false)"></tg-discard-changes-modal>
   </ng-container>
 </ng-container>

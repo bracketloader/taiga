@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 import { CanDeactivateService } from './can-deactivate.service';
 
 export interface ComponentCanDeactivate {
-  canDeactivate: () => boolean | Observable<boolean>;
+  canDeactivate: () => Observable<boolean>;
 }
 
 export const CanDeactivateGuard: CanDeactivateFn<
