@@ -70,6 +70,7 @@ export class CommentsComponent {
   @Input({ required: true }) public loading!: boolean;
   @Input() public canComment = false;
   @Output() public changeOrder = new EventEmitter<OrderComments>();
+  @Output() public comment = new EventEmitter<string>();
 
   public localStorageService = inject(LocalStorageService);
 

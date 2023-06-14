@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, map, startWith } from 'rxjs';
 import { RxEffects } from '@rx-angular/state/effects';
 import { RouteHistoryService } from '~/app/shared/route-history/route-history.service';
 import { StoryDetailActions } from '../story-detail/data-access/+state/actions/story-detail.actions';
@@ -27,6 +27,7 @@ import {
 import { CommonTemplateModule } from '~/app/shared/common-template.module';
 import { ProjectFeatureStoryWrapperFullViewModule } from '../feature-story-wrapper-full-view/project-feature-story-wrapper-full-view.module';
 import { filterNil } from '~/app/shared/utils/operators';
+import { Router } from '@angular/router';
 @UntilDestroy()
 @Component({
   selector: 'tg-project-feature-view-setter',
@@ -53,6 +54,7 @@ export class ProjectFeatureViewSetterComponent {
   private effects = inject(RxEffects);
 
   constructor(
+    private router: Router,
     private store: Store,
     private routerHistory: RouteHistoryService,
     private cd: ChangeDetectorRef
@@ -64,6 +66,7 @@ export class ProjectFeatureViewSetterComponent {
       .pipe(
         untilDestroyed(this),
         map(({ url }) => url),
+        startWith(this.router.url),
         distinctUntilChanged()
       )
       .subscribe((url) => {
@@ -74,10 +77,6 @@ export class ProjectFeatureViewSetterComponent {
           this.fetchStory();
         }
       });
-
-    if (!this.isKanban) {
-      this.fetchStory();
-    }
 
     this.effects.register(
       this.kanbanHost$.pipe(distinctUntilChanged(), filterNil()),

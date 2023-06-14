@@ -55,7 +55,8 @@ Copyright (c) 2023-present Kaleidos INC
   </ng-container>
 
   <tg-comment-user-input
-    *ngIf="canComment && order === '-createdAt'"></tg-comment-user-input>
+    *ngIf="canComment && order === '-createdAt'"
+    (saved)="comment.next($event)"></tg-comment-user-input>
 
   <ng-container *ngIf="total">
     <div class="comment-list">
@@ -102,6 +103,7 @@ Copyright (c) 2023-present Kaleidos INC
     </ng-container>
 
     <tg-comment-user-input
+      (saved)="comment.next($event)"
       class="bottom"
       *ngIf="canComment && order === 'createdAt'"></tg-comment-user-input>
   </ng-container>

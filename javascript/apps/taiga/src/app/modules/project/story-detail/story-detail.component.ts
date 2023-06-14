@@ -516,6 +516,16 @@ export class StoryDetailComponent {
     );
   }
 
+  public onComment(comment: string) {
+    this.store.dispatch(
+      StoryDetailActions.newComment({
+        storyRef: this.state.get('story').ref,
+        projectId: this.state.get('project').id,
+        comment,
+      })
+    );
+  }
+
   private events() {
     this.wsService
       .projectEvents<{ ref: Story['ref']; deletedBy: Partial<User> }>(

@@ -27,8 +27,8 @@ import {
   Workflow,
   UserComment,
 } from '@taiga/data';
-import { Observable } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, delay, map } from 'rxjs/operators';
 
 export interface MembersResponse {
   totalMemberships: number;
@@ -534,5 +534,13 @@ export class ProjectApiService {
           };
         })
       );
+  }
+
+  public newComment(
+    projectId: Project['id'],
+    ref: Story['ref'],
+    comment: string
+  ) {
+    return of(null).pipe(delay(1000));
   }
 }

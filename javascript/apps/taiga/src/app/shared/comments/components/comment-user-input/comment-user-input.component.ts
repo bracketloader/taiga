@@ -9,7 +9,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   HostListener,
+  Output,
   inject,
 } from '@angular/core';
 import { UserAvatarComponent } from '~/app/shared/user-avatar/user-avatar.component';
@@ -47,6 +49,9 @@ interface CommentUserInputComponentState {
   providers: [RxState],
 })
 export class CommentUserInputComponent implements ComponentCanDeactivate {
+  @Output()
+  public saved = new EventEmitter<string>();
+
   @HostListener('window:beforeunload')
   public canDeactivate() {
     return !this.hasChanges();
@@ -57,6 +62,13 @@ export class CommentUserInputComponent implements ComponentCanDeactivate {
   public model$ = this.state.select();
 
   constructor() {
+    this.state.set({
+      comment: '',
+      editorReady: false,
+      showConfirmationModal: false,
+      open: false,
+    });
+
     this.state.connect('user', this.store.select(selectUser).pipe(filterNil()));
 
     const canDeactivateService = inject(CanDeactivateService);
@@ -100,5 +112,9 @@ export class CommentUserInputComponent implements ComponentCanDeactivate {
 
   public keepEditing() {
     this.state.set({ showConfirmationModal: false });
+  }
+
+  public save() {
+    this.saved.emit(this.state.get('comment'));
   }
 }
