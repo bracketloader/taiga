@@ -29,7 +29,6 @@ import {
   selectStory,
   selectWorkflow,
 } from '../selectors/story-detail.selectors';
-import { storyDetailFeature } from '../reducers/story-detail.reducer';
 
 @Injectable()
 export class StoryDetailEffects {
