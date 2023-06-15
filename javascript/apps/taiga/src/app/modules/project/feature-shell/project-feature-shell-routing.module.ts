@@ -27,6 +27,7 @@ const routes: Routes = [
           import(
             '~/app/modules/project/feature-view-setter/project-feature-view-setter.module'
           ).then((m) => m.ProjectFeatureViewSetterModule),
+        canDeactivate: [CanDeactivateGuard],
       },
       {
         path: 'kanban',
@@ -34,6 +35,7 @@ const routes: Routes = [
           import(
             '~/app/modules/project/feature-view-setter/project-feature-view-setter.module'
           ).then((m) => m.ProjectFeatureViewSetterModule),
+        canDeactivate: [CanDeactivateGuard],
       },
       {
         path: ':slug/stories/:storyRef',

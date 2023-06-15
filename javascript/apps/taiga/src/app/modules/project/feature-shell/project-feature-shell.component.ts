@@ -267,6 +267,21 @@ export class ProjectFeatureShellComponent implements OnDestroy, AfterViewInit {
         }
       });
 
+    // todo: fake event
+    this.wsService
+      .projectEvents<{ project: string; storyRef: StoryDetail['ref'] }>(
+        'comments.create'
+      )
+      .pipe(untilDestroyed(this))
+      .subscribe((msg) => {
+        this.store.dispatch(
+          projectEventActions.createComment({
+            projectId: msg.event.content.project,
+            storyRef: msg.event.content.storyRef,
+          })
+        );
+      });
+
     const userLostPermissions = this.wsService.userEvents<{
       membership: WorkspaceMembership;
     }>('workspacememberships.delete');

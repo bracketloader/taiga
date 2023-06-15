@@ -6,7 +6,7 @@
  * Copyright (c) 2023-present Kaleidos INC
  */
 
-import { Injectable } from '@angular/core';
+import { DestroyRef, Injectable } from '@angular/core';
 import { ComponentCanDeactivate } from './can-deactivate.guard';
 import { map, zip } from 'rxjs';
 
@@ -14,8 +14,14 @@ import { map, zip } from 'rxjs';
 export class CanDeactivateService {
   private components: ComponentCanDeactivate[] = [];
 
-  public addComponent(component: ComponentCanDeactivate) {
+  public addComponent(component: ComponentCanDeactivate, destroy?: DestroyRef) {
     this.components.push(component);
+
+    if (destroy) {
+      destroy.onDestroy(() => {
+        this.deleteComponent(component);
+      });
+    }
   }
 
   public deleteComponent(component: ComponentCanDeactivate) {
@@ -23,8 +29,12 @@ export class CanDeactivateService {
   }
 
   public check() {
-    return zip([...this.components.map((it) => it.canDeactivate())]).pipe(
-      map((results) => !results.some((it) => !it))
-    );
+    if (this.components.length) {
+      return zip([...this.components.map((it) => it.canDeactivate())]).pipe(
+        map((results) => !results.some((it) => !it))
+      );
+    }
+
+    return true;
   }
 }

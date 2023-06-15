@@ -9,6 +9,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   EventEmitter,
   HostListener,
   Input,
@@ -26,7 +27,7 @@ import { CommonTemplateModule } from '~/app/shared/common-template.module';
 import { DiscardChangesModalComponent } from '~/app/shared/discard-changes-modal/discard-changes-modal.component';
 import { ComponentCanDeactivate } from '~/app/shared/can-deactivate/can-deactivate.guard';
 import { CanDeactivateService } from '~/app/shared/can-deactivate/can-deactivate.service';
-import { Subject, filter, merge, of, take, throttleTime } from 'rxjs';
+import { Subject, filter, merge, of, take, tap, throttleTime } from 'rxjs';
 import { CommentsAutoScrollDirective } from '~/app/shared/comments/directives/comments-auto-scroll.directive';
 import { OrderComments } from '~/app/shared/comments/comments.component';
 import { ResizedDirective } from '~/app/shared/resize/resize.directive';
@@ -85,7 +86,7 @@ export class CommentUserInputComponent implements ComponentCanDeactivate {
     this.state.connect('user', this.store.select(selectUser).pipe(filterNil()));
 
     const canDeactivateService = inject(CanDeactivateService);
-    canDeactivateService.addComponent(this);
+    canDeactivateService.addComponent(this, inject(DestroyRef));
 
     this.state.hold(this.discard$, (discard) => {
       if (discard) {
@@ -110,10 +111,11 @@ export class CommentUserInputComponent implements ComponentCanDeactivate {
   }
 
   public canDeactivate() {
+    console.log('canDeactivate');
     if (this.hasChanges()) {
       this.state.set({ showConfirmationModal: true });
 
-      return this.discard$.pipe(take(1));
+      return this.discard$.pipe(take(1)).pipe(tap(console.log));
     }
 
     return of(true);

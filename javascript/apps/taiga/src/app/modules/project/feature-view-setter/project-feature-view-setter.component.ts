@@ -105,7 +105,8 @@ export class ProjectFeatureViewSetterComponent implements OnDestroy {
         pairwise(),
         filter(([, next]) => next)
       ),
-      () => {
+      (next) => {
+        console.log('leave story detail', next);
         this.store.dispatch(StoryDetailActions.leaveStoryDetail());
       }
     );
