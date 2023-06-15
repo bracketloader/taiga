@@ -11,13 +11,14 @@ import {
   Component,
   EventEmitter,
   HostListener,
+  Input,
   Output,
   inject,
 } from '@angular/core';
 import { UserAvatarComponent } from '~/app/shared/user-avatar/user-avatar.component';
 import { Store } from '@ngrx/store';
 import { selectUser } from '~/app/modules/auth/data-access/+state/selectors/auth.selectors';
-import { filterNil } from '~/app/shared/utils/operators';
+import { filterFalsy, filterNil } from '~/app/shared/utils/operators';
 import { RxState } from '@rx-angular/state';
 import { User } from '@taiga/data';
 import { EditorComponent } from '~/app/shared/editor/editor.component';
@@ -25,7 +26,10 @@ import { CommonTemplateModule } from '~/app/shared/common-template.module';
 import { DiscardChangesModalComponent } from '~/app/shared/discard-changes-modal/discard-changes-modal.component';
 import { ComponentCanDeactivate } from '~/app/shared/can-deactivate/can-deactivate.guard';
 import { CanDeactivateService } from '~/app/shared/can-deactivate/can-deactivate.service';
-import { Subject, delay, map, of, take } from 'rxjs';
+import { Subject, filter, merge, of, take, throttleTime } from 'rxjs';
+import { CommentsAutoScrollDirective } from '~/app/shared/comments/directives/comments-auto-scroll.directive';
+import { OrderComments } from '../../comments.component';
+import { ResizedDirective } from '~/app/shared/resize/resize.directive';
 
 interface CommentUserInputComponentState {
   user: User;
@@ -43,6 +47,7 @@ interface CommentUserInputComponentState {
     UserAvatarComponent,
     EditorComponent,
     DiscardChangesModalComponent,
+    ResizedDirective,
   ],
   templateUrl: './comment-user-input.component.html',
   styleUrls: ['./comment-user-input.component.css'],
@@ -50,6 +55,9 @@ interface CommentUserInputComponentState {
   providers: [RxState],
 })
 export class CommentUserInputComponent implements ComponentCanDeactivate {
+  @Input({ required: true })
+  public order!: OrderComments;
+
   @Output()
   public saved = new EventEmitter<string>();
 
@@ -58,10 +66,14 @@ export class CommentUserInputComponent implements ComponentCanDeactivate {
     return !this.hasChanges();
   }
 
+  public commentsAutoScrollDirective = inject(CommentsAutoScrollDirective, {
+    optional: true,
+  });
   public store = inject(Store);
   public state = inject(RxState) as RxState<CommentUserInputComponentState>;
   public model$ = this.state.select();
   public discard$ = new Subject<boolean>();
+  public resizeEditor$ = new Subject<void>();
 
   constructor() {
     this.reset();
@@ -78,6 +90,19 @@ export class CommentUserInputComponent implements ComponentCanDeactivate {
         this.keepEditing();
       }
     });
+
+    this.state.hold(
+      merge(
+        this.state.select('editorReady').pipe(filterFalsy()),
+        this.resizeEditor$
+      ).pipe(
+        filter(() => this.order === 'createdAt'),
+        throttleTime(100)
+      ),
+      () => {
+        this.commentsAutoScrollDirective?.scrollToBottom();
+      }
+    );
   }
 
   public canDeactivate() {

@@ -235,6 +235,8 @@ export const reducer = createImmerReducer(
 
       if (state.totalComments) {
         state.totalComments++;
+      } else {
+        state.totalComments = 1;
       }
 
       return state;
