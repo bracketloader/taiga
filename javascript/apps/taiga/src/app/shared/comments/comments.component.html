@@ -55,6 +55,7 @@ Copyright (c) 2023-present Kaleidos INC
   </ng-container>
 
   <tg-comment-user-input
+    tgRestoreFocusTarget="open-comment-input"
     *ngIf="canComment && order === '-createdAt'"
     [order]="order"
     (saved)="comment.next($event)"></tg-comment-user-input>
@@ -104,6 +105,7 @@ Copyright (c) 2023-present Kaleidos INC
     </ng-container>
 
     <tg-comment-user-input
+      tgRestoreFocusTarget="open-comment-input"
       [order]="order"
       (saved)="comment.next($event)"
       class="bottom"

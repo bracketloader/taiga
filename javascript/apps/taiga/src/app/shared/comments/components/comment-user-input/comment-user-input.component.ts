@@ -28,8 +28,10 @@ import { ComponentCanDeactivate } from '~/app/shared/can-deactivate/can-deactiva
 import { CanDeactivateService } from '~/app/shared/can-deactivate/can-deactivate.service';
 import { Subject, filter, merge, of, take, throttleTime } from 'rxjs';
 import { CommentsAutoScrollDirective } from '~/app/shared/comments/directives/comments-auto-scroll.directive';
-import { OrderComments } from '../../comments.component';
+import { OrderComments } from '~/app/shared/comments/comments.component';
 import { ResizedDirective } from '~/app/shared/resize/resize.directive';
+import { RestoreFocusDirective } from '~/app/shared/directives/restore-focus/restore-focus.directive';
+import { RestoreFocusTargetDirective } from '~/app/shared/directives/restore-focus/restore-focus-target.directive';
 
 interface CommentUserInputComponentState {
   user: User;
@@ -48,6 +50,8 @@ interface CommentUserInputComponentState {
     EditorComponent,
     DiscardChangesModalComponent,
     ResizedDirective,
+    RestoreFocusDirective,
+    RestoreFocusTargetDirective,
   ],
   templateUrl: './comment-user-input.component.html',
   styleUrls: ['./comment-user-input.component.css'],

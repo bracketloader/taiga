@@ -8,6 +8,13 @@
 
 import { Directive, ElementRef, inject } from '@angular/core';
 
+/*
+  If the comment input is at the bottom of the page, the page must scroll to the bottom
+  because the actions buttons must be visible.
+
+  This happens every time the comment input is resized.
+*/
+
 @Directive({
   // eslint-disable-next-line @angular-eslint/directive-selector
   selector: '[tgCommentsAutoScroll]',
@@ -21,8 +28,6 @@ export class CommentsAutoScrollDirective {
   }
 
   public scrollToBottom() {
-    console.log(this.nativeElement, this.nativeElement.scrollHeight);
-
     this.nativeElement.scrollTop = this.nativeElement.scrollHeight;
   }
 }
