@@ -53,10 +53,12 @@ describe('StoryDetail', () => {
   });
 
   beforeEach(() => {
-    cy.visit(`/project/${project.id}/${project.slug}/${story.ref}`);
+    cy.login();
+
+    cy.visit(`/project/${project.id}/${project.slug}/stories/${story.ref}`);
   });
 
-  it('create comment', () => {
+  it('create comment && sort', () => {
     // first comment
     cy.getBySel('open-comment-input').click();
 
