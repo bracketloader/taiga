@@ -13,7 +13,11 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Action } from '@ngrx/store';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { ProjectApiService } from '@taiga/api';
-import { StoryDetailMockFactory, UserCommentMockFactory } from '@taiga/data';
+import {
+  StoryDetailMockFactory,
+  UserCommentMockFactory,
+  UserMockFactory,
+} from '@taiga/data';
 import { cold, hot } from 'jest-marbles';
 import { Observable } from 'rxjs';
 
@@ -26,6 +30,9 @@ import {
 } from '../actions/story-detail.actions';
 import { StoryDetailCommentsEffects } from './story-detail-comments.effects';
 import { storyDetailFeature } from '../reducers/story-detail.reducer';
+import { HttpErrorResponse } from '@angular/common/http';
+import { projectEventActions } from '~/app/modules/project/data-access/+state/actions/project.actions';
+import { selectUser } from '~/app/modules/auth/data-access/+state/selectors/auth.selectors';
 
 describe('StoryDetailEffects', () => {
   let actions$: Observable<Action>;
@@ -121,5 +128,101 @@ describe('StoryDetailEffects', () => {
     projectApiService.getComments.mockReturnValue(response);
 
     expect(effects.fetchComments$).toBeObservable(expected);
+  });
+
+  describe('newComment$', () => {
+    it('should dispatch newCommentSuccess action on successful new comment', () => {
+      const projectApiService = spectator.inject(ProjectApiService);
+      const effects = spectator.inject(StoryDetailCommentsEffects);
+      const comment = 'Test comment';
+      const storyRef = 123;
+      const projectId = 'testProject';
+      const user = UserMockFactory();
+
+      store.overrideSelector(selectUser, user);
+
+      const action = StoryDetailActions.newComment({
+        storyRef,
+        projectId,
+        comment,
+        user,
+      });
+      const completion = StoryDetailApiActions.newCommentSuccess({
+        storyRef,
+        projectId,
+        comment,
+        user,
+      });
+
+      actions$ = hot('-a', { a: action });
+      const response = cold('-b|', { b: null });
+      const expected = cold('--c', { c: completion });
+
+      projectApiService.newComment.mockReturnValue(response);
+
+      expect(effects.newComent$).toBeObservable(expected);
+    });
+
+    it('should dispatch newCommentError action on failed new comment', () => {
+      const projectApiService = spectator.inject(ProjectApiService);
+      const effects = spectator.inject(StoryDetailCommentsEffects);
+      const comment = 'Test comment';
+      const storyRef = 123;
+      const projectId = 'testProject';
+      const user = UserMockFactory();
+      store.overrideSelector(selectUser, user);
+
+      const action = StoryDetailActions.newComment({
+        storyRef,
+        projectId,
+        comment,
+        user,
+      });
+      const completion = StoryDetailApiActions.newCommentError(action);
+      const error = new HttpErrorResponse({});
+
+      actions$ = hot('-a', { a: action });
+      const response = cold('-#|', {}, error);
+      const expected = cold('--c', { c: completion });
+
+      projectApiService.newComment.mockReturnValue(response);
+
+      expect(effects.newComent$).toBeObservable(expected);
+    });
+  });
+
+  it('should fetch comments when a createComment event occurs', () => {
+    const projectApiService = spectator.inject(ProjectApiService);
+    const effects = spectator.inject(StoryDetailCommentsEffects);
+
+    const story = StoryDetailMockFactory();
+    const projectId = 'testProject';
+    const storyRef = story.ref;
+    const order = 'createdAt';
+    const offset = 0;
+    const total = 10;
+    const comments = Array(total).fill({});
+
+    store.overrideSelector(storyDetailFeature.selectStory, story);
+    store.overrideSelector(storyDetailFeature.selectCommentsOrder, order);
+
+    const action = projectEventActions.createComment({
+      projectId,
+      storyRef,
+    });
+    const completion = StoryDetailApiActions.fetchCommentsSuccess({
+      comments,
+      total,
+      order,
+      offset,
+    });
+
+    actions$ = hot('-a', { a: action });
+    const response = cold('-b|', { b: { comments, total } });
+    const expected = cold('--c', { c: completion });
+
+    projectApiService.getComments.mockReturnValue(response);
+
+    expect(effects.fetchCommentsOnEvent$).toBeObservable(expected);
   });
 });

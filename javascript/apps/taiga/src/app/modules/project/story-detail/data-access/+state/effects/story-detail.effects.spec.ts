@@ -16,7 +16,6 @@ import { ProjectApiService } from '@taiga/api';
 import {
   ProjectMockFactory,
   StoryDetailMockFactory,
-  UserCommentMockFactory,
   WorkflowMockFactory,
 } from '@taiga/data';
 import { cold, hot } from 'jest-marbles';
@@ -35,7 +34,6 @@ import {
   selectWorkflow,
 } from '../selectors/story-detail.selectors';
 import { StoryDetailEffects } from './story-detail.effects';
-import { storyDetailFeature } from '../reducers/story-detail.reducer';
 
 describe('StoryDetailEffects', () => {
   let actions$: Observable<Action>;
