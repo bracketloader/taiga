@@ -111,11 +111,10 @@ export class CommentUserInputComponent implements ComponentCanDeactivate {
   }
 
   public canDeactivate() {
-    console.log('canDeactivate');
     if (this.hasChanges()) {
       this.state.set({ showConfirmationModal: true });
 
-      return this.discard$.pipe(take(1)).pipe(tap(console.log));
+      return this.discard$.pipe(take(1));
     }
 
     return of(true);

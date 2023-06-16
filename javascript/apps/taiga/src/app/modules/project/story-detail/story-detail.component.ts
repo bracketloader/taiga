@@ -412,25 +412,35 @@ export class StoryDetailComponent {
   }
 
   public navigateToNextStory(ref: number) {
-    this.location.go(
-      `project/${this.state.get('project').id}/${
-        this.state.get('project').slug
-      }/stories/${ref}`,
-      undefined,
+    void this.router.navigate(
+      [
+        'project',
+        this.state.get('project').id,
+        this.state.get('project').slug,
+        'stories',
+        ref,
+      ],
       {
-        nextStoryNavigation: true,
+        state: {
+          nextStoryNavigation: true,
+        },
       }
     );
   }
 
   public navigateToPreviousStory(ref: number) {
-    this.location.go(
-      `project/${this.state.get('project').id}/${
-        this.state.get('project').slug
-      }/stories/${ref}`,
-      undefined,
+    void this.router.navigate(
+      [
+        'project',
+        this.state.get('project').id,
+        this.state.get('project').slug,
+        'stories',
+        ref,
+      ],
       {
-        previousStoryNavigation: true,
+        state: {
+          previousStoryNavigation: true,
+        },
       }
     );
   }
@@ -439,7 +449,7 @@ export class StoryDetailComponent {
     const ref = this.state.get('story').ref;
 
     this.store.dispatch(StoryDetailActions.leaveStoryDetail());
-    this.location.replaceState(
+    void this.router.navigateByUrl(
       `project/${this.state.get('project').id}/${
         this.state.get('project').slug
       }/kanban`
