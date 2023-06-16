@@ -2,6 +2,7 @@
 
 Check list for reviewing pull requests:
 - models
+- migrations (with descriptive name)
 - api + validators
 - services
 - repositories
