@@ -19,6 +19,7 @@ Copyright (c) 2023-present Kaleidos INC
 
     <button
       *ngIf="!vm.open"
+      data-test="open-comment-input"
       tgRestoreFocusTarget="open-comment-input"
       (click)="open()"
       type="button"
@@ -32,8 +33,9 @@ Copyright (c) 2023-present Kaleidos INC
       [class.ready]="vm.editorReady"
       *ngIf="vm.open">
       <tg-editor
+        id="comment"
         tgRestoreFocus="open-comment-input"
-        [field]="''"
+        field=""
         [placeholder]="t('comments.leave_comment')"
         (contentChange)="onCommentContentChange($event)"
         (editorReady)="onInitEditor()"></tg-editor>
@@ -51,7 +53,7 @@ Copyright (c) 2023-present Kaleidos INC
         </button>
         <button
           (click)="save()"
-          data-test="coment-save"
+          data-test="comment-save"
           tuiButton
           type="submit"
           appearance="primary">

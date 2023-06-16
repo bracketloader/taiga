@@ -12,6 +12,7 @@ Copyright (c) 2023-present Kaleidos INC
       {{ t('comments.title') }}
       <span
         *ngIf="total"
+        data-test="comments-total"
         class="total-comments"
         >({{ total }})</span
       >
@@ -37,6 +38,7 @@ Copyright (c) 2023-present Kaleidos INC
         type="button"
         class="sort"
         appearance="sort"
+        data-test="sort-comments"
         [attr.aria-label]="
           order === '-createdAt'
             ? t('comments.order.new')
@@ -56,7 +58,7 @@ Copyright (c) 2023-present Kaleidos INC
 
   <tg-comment-user-input
     tgRestoreFocusTarget="open-comment-input"
-    *ngIf="canComment && order === '-createdAt'"
+    *ngIf="(canComment && order === '-createdAt') || !total"
     [order]="order"
     (saved)="comment.next($event)"></tg-comment-user-input>
 
@@ -64,6 +66,7 @@ Copyright (c) 2023-present Kaleidos INC
     <div class="comment-list">
       <div
         *ngFor="let comment of comments; trackBy: trackIndex"
+        data-test="comment"
         class="comment">
         <div class="creation-info">
           <tg-user-avatar

@@ -51,6 +51,9 @@ interface EditorState {
 })
 export class EditorComponent {
   @Input({ required: true })
+  public id!: string;
+
+  @Input({ required: true })
   public field!: string | null;
 
   @Input()
